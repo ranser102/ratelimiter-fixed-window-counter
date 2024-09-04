@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      LOCAL_DOCKER_CONTEXT: docker
-      LOCAL_DOCKER_FILE: docker/Dockerfile-memcached
+      LOCAL_DOCKER_CONTEXT: src
+      LOCAL_DOCKER_FILE: src/Dockerfile-memcached
 
     steps:
     - name: set context vars
@@ -44,7 +44,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
       with:
-        # context: ${{ env.BUILD_CONTEXT }} 
+        context: ${{ env.BUILD_CONTEXT }} 
         file: ${{ env.BUILD_FILE }}
         push: true
         tags: ghcr.io/${{ github.repository_owner }}/ratelimiter-fixed-window-counter:latest
