@@ -15,7 +15,7 @@ on:
         default: ''
 
 env:
-  DEFAULT_DIRS: "./src/test"
+  DEFAULT_DIRS: "./src ./src/test"
   DEFAULT_DISABLED_RULES: "E0401,W0621,C0413"
   TEST_FILES: "./src/test/test_ratelimit_memcached.py"
 
