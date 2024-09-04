@@ -1,0 +1,26 @@
+
+services:
+  memcached:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
+    networks:
+      - memcached-network
+  ratelimiter:
+    build:
+      context: .
+      dockerfile: Dockerfile-memcached
+    image: ghcr.io/ranser102/ratelimiter-fixed-window-counter:latest      
+    ports:
+      - "9001-9003:8000"
+    command: ["python", "main.py"]
+    environment:
+      - MEMCACHED_HOST=memcached
+      - MEMCACHED_PORT=11211
+      - LOG_LEVEL=debug
+    networks:
+      - memcached-network
+    scale: 3      
+networks:
+  memcached-network:
+    driver: bridge      

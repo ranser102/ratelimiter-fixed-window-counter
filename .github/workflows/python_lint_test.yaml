@@ -1,0 +1,91 @@
+name: Lint Python Files
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      directories:
+        description: 'Directories to lint'
+        required: false
+        default: './src'
+      disabled_rules:
+        description: 'Pylint rules to disable'
+        required: false
+        default: ''
+
+env:
+  DEFAULT_DIRS: "./src/test"
+  DEFAULT_DISABLED_RULES: "E0401,W0621,C0413"
+  TEST_FILES: "./src/test/test_ratelimit_memcached.py"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install libraries
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+        pip install fastapi uvicorn pymemcache
+
+    - name: Set directories variable
+      id: set-directories
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "directories=${{ github.event.inputs.directories }}" >> $GITHUB_ENV
+        else
+          echo "directories=${DEFAULT_DIRS}" >> $GITHUB_ENV
+        fi     
+        
+    - name: Set disabled rules variable
+      id: set-disabled-rules
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "disabled_rules=${{ github.event.inputs.disabled_rules }}" >> $GITHUB_ENV
+        else
+          echo "disabled_rules=${DEFAULT_DISABLED_RULES}" >> $GITHUB_ENV
+        fi              
+
+    - name: Run pylint
+      run: |
+        echo $directories
+        echo $disabled_rules
+        if [ -n "$disabled_rules" ]; then
+          DISABLED_RULES_OPTION="--disable=$disabled_rules"
+        else
+          DISABLED_RULES_OPTION=""
+        fi
+        for dir in $directories; do
+          pylint $DISABLED_RULES_OPTION $dir/**/*.py
+        done
+
+  unittest:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest fastapi uvicorn pymemcache
+
+    - name: Run pytest
+      run: |
+        pytest ${TEST_FILE}

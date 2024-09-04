@@ -1,0 +1,50 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      LOCAL_DOCKER_CONTEXT: docker
+      LOCAL_DOCKER_FILE: docker/Dockerfile-memcached
+
+    steps:
+    - name: set context vars
+      run: |
+        echo "BUILD_CONTEXT=${GITHUB_WORKSPACE}/${LOCAL_DOCKER_CONTEXT}" >> $GITHUB_ENV
+        echo "BUILD_FILE=${GITHUB_WORKSPACE}/${LOCAL_DOCKER_FILE}" >> $GITHUB_ENV
+        
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GH_CONTAINER_REGISTRY_TOKEN }}
+
+    # - name: check
+    #   run: |
+    #     echo ${{ env.BUILD_CONTEXT }} 
+    #     echo ${{ env.BUILD_FILE }}
+        
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ env.BUILD_CONTEXT }} 
+        file: ${{ env.BUILD_FILE }}
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/ratelimiter-fixed-window-counter:latest
