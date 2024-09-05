@@ -28,11 +28,11 @@ def simulate_load(url, num_users, request_rate, duration_in_seconds=60):
 
 if __name__ == "__main__":
     urls = [
-        "http://127.0.0.1:9001/ratelimit?max_limit=3&key=eran&interval=10",
-        "http://127.0.0.1:9002/ratelimit?max_limit=3&key=sery&interval=10",
-        "http://127.0.0.1:9003/ratelimit?max_limit=3&key=liam&interval=10",
-        "http://127.0.0.1:9001/ratelimit?max_limit=3&key=sagiv&interval=10",
-        "http://127.0.0.1:9002/ratelimit?max_limit=3&key=nahor&interval=10"
+        "http://127.0.0.1:9001/ratelimit?max_limit=3&key=azure&interval=10",
+        "http://127.0.0.1:9002/ratelimit?max_limit=3&key=gcp&interval=10",
+        "http://127.0.0.1:9003/ratelimit?max_limit=3&key=aws&interval=10",
+        "http://127.0.0.1:9001/ratelimit?max_limit=3&key=oracle&interval=10",
+        "http://127.0.0.1:9002/ratelimit?max_limit=3&key=ibm&interval=10"
     ]
 
     num_users = 1000
