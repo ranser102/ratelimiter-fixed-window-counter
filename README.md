@@ -42,7 +42,7 @@ The implementation is this repository contains these parts:
 - K8s [manifests](k8s) for distributed deployment **
 - Load Test [script](loadtest/loadtest.py).
 - [Actions](.github/workflows) for linting, unit-test, container image build and distribution to container images registry.
-- Setup for Github Codespaces, including tools for test and deploy such docker, docker-compose, kind, pytest, apache-benchmark etc. 
+- [Setup](.devcontainer) for Github Codespaces, including tools for test and deploy such docker, docker-compose, kind, pytest, apache-benchmark etc. 
 
 \** *Work in progress*
 
