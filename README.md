@@ -28,6 +28,7 @@ This algorithm is simple as it sounds:
 
 Below is a diagram that illustrate the flow:
 
+![Fixed Window Counter](diagrams/FixedWindowCounter.png)
 
 ### Repository Assets
 The implementation is this repository contains these parts:
