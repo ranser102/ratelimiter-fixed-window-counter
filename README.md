@@ -53,8 +53,27 @@ I found it to be more convenient to use a tool such docker-compose to test distr
 Similar deployment can be done using kind cluster, to simulate deplyment into k8s cluster.  
 \**At this point of time, more work is required here, to deploy the memcached DB and integrate it with the rate limiter service*
 
-### Functional Tests
-Basic use-cases are covered. (*There is still room for improvement here*). 
+#### Steps
+- Using docker-compose, memcached instance and three Rate Limiter services will be deployed:
+```
+docker-compose -f src/docker-compose-memcached.yaml up --force-recreate --no-build
+```
+- Endpoints: 
+    - [http://\<your-host\>:9001/](http://127.0.0.1:9001/)
+    - [http://\<your-host\>:9002/](http://127.0.0.1:9002/)
+    - [http://\<your-host\>:9003/](http://127.0.0.1:9003/)
+
+- Local interactive test:
+    - Interactive UI: [http://\<your-host\>:9001/docs](http://127.0.0.1:9001/docs)
+    - cli:
+    ```bash
+    curl -X GET "http://localhost:9001/ratelimit?max_limit=7&interval=100&key=gcp"
+
+    curl -X GET "http://localhost:9001/checkbalance?key=gcp"
+    ```
+
+### Functional Unit Tests
+Basic use-cases are covered with [pytest](src/test/test_ratelimit_memcached.py). (*There is still room for improvement here*). 
 
 ### Load Tests
 I used two methods for load test:
