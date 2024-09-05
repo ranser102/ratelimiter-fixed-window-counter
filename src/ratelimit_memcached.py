@@ -49,12 +49,10 @@ except MemcacheError as e:
 
 def rate_limit(key :str, interval_in_secs :int, max_limit :int) -> bool:
     """Rate limit the requests based on the key, interval_in_secs, and max_limit."""
-    if not isinstance(interval_in_secs, int):
-        logging.error("Second argument interval_in_secs is not an integer")
-        sys.exit(2)
-    if not isinstance(max_limit, int):
-        logging.error("Third argument max_limit is not an integer")
-        sys.exit(3)
+    if not isinstance(interval_in_secs, int) or interval_in_secs <= 0:
+        raise ValueError("interval_in_secs must be a positive integer greater than zero")
+    if not isinstance(max_limit, int) or max_limit <= 0:
+        raise ValueError("max_limit must be a positive integer greater than zero")
 
     # In order to know if a request fall into a current fixed window or in a new window
     # I'm dividing the current time (in seconds) by the rate limit window interval, rounded down.

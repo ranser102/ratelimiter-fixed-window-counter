@@ -7,9 +7,9 @@ services:
     networks:
       - memcached-network
   ratelimiter:
-    build:
-      context: .
-      dockerfile: Dockerfile-memcached
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile-memcached
     image: ghcr.io/ranser102/ratelimiter-fixed-window-counter:latest      
     ports:
       - "9001-9003:8000"

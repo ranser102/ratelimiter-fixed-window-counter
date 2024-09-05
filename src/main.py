@@ -1,7 +1,7 @@
 """This module creating api endpoints for Rate Limiter."""
 
 import sys
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 import uvicorn
 
 from ratelimit_memcached import rate_limit, get_balance
@@ -14,7 +14,7 @@ def read_root():
     return {"message": "Welcome to RateLimiter with Memcached!"}
 
 @app.get("/ratelimit")
-async def check_rate_limit(key: str, interval: int=60, max_limit: int=1):
+async def check_rate_limit(key: str, interval: int = Query(60, gt=0), max_limit: int = Query(1, gt=0)):
     """ Check rate limit for a key in a given interval."""  
     try:
         if rate_limit(str(key), int(interval), int(max_limit)):
